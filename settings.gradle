@@ -14,3 +14,7 @@ dependencyResolutionManagement {
 }
 rootProject.name = "AstrCalc"
 include ':app'
+//include ':libraries:SolarSystem'
+//include ':libraries:units'
+//include ':libraries:coorSystems'
+//include ':libraries:cons'
