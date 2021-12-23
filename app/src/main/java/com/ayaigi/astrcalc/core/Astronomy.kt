@@ -1,9 +1,13 @@
 package com.ayaigi.astrcalc.core
 
-import com.ayaigi.astrcalc.solarsystem.AstroTarget
-import com.ayaigi.astrcalc.solarsystem.SolarSystemCalc
-import com.ayaigi.astrcalc.solarsystem.*
-import com.ayaigi.astrcalc.units.Degree
+import com.ayaigi.astrcalc.target.solarsystem.AstroTarget
+import com.ayaigi.astrcalc.target.solarsystem.SolarSystemCalc
+import com.ayaigi.astrcalc.target.solarsystem.*
+import com.ayaigi.astrcalc.lib.units.Degree
+import com.ayaigi.astrcalc.target.AstroCalcTarget
+import com.ayaigi.astrcalc.target.solarsystem.calc.Moon
+import com.ayaigi.astrcalc.target.solarsystem.calc.Planet
+import com.ayaigi.astrcalc.target.solarsystem.calc.Sun
 import java.time.Instant
 import java.time.OffsetDateTime
 

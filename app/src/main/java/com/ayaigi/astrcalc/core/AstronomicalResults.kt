@@ -1,15 +1,15 @@
 package com.ayaigi.astrcalc.core
 
-import com.ayaigi.astrcalc.coorsytems.Distance
-import com.ayaigi.astrcalc.coorsytems.EquatorialSystem
-import com.ayaigi.astrcalc.coorsytems.HorizontalSystem
-import com.ayaigi.astrcalc.coorsytems.RiseAndSet
-import com.ayaigi.astrcalc.solarsystem.AstroCalcTarget
-import com.ayaigi.astrcalc.solarsystem.AstroTarget
-import com.ayaigi.astrcalc.solarsystem.SolarPhase
-import com.ayaigi.astrcalc.solarsystem.SolarSystemCalc
-import com.ayaigi.astrcalc.units.Degree
-import com.ayaigi.astrcalc.units.SiderealTime
+import com.ayaigi.astrcalc.lib.coorsytems.Distance
+import com.ayaigi.astrcalc.lib.coorsytems.EquatorialSystem
+import com.ayaigi.astrcalc.lib.coorsytems.HorizontalSystem
+import com.ayaigi.astrcalc.lib.coorsytems.RiseAndSet
+import com.ayaigi.astrcalc.target.AstroCalcTarget
+import com.ayaigi.astrcalc.target.solarsystem.AstroTarget
+import com.ayaigi.astrcalc.target.solarsystem.SolarPhase
+import com.ayaigi.astrcalc.target.solarsystem.SolarSystemCalc
+import com.ayaigi.astrcalc.lib.units.Degree
+import com.ayaigi.astrcalc.lib.units.SiderealTime
 import java.time.OffsetDateTime
 
 sealed interface AstronomicalResults {
