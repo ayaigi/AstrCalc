@@ -1,4 +1,4 @@
-package com.ayaigi.astrcalc.cons
+package com.ayaigi.astrcalc.lib.cons
 
 import kotlin.math.PI as dPI
 

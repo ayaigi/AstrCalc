@@ -1,6 +1,10 @@
-package com.ayaigi.astrcalc.solarsystem
+package com.ayaigi.astrcalc.target.solarsystem.calc
 
-import com.ayaigi.astrcalc.units.*
+import com.ayaigi.astrcalc.lib.units.*
+import com.ayaigi.astrcalc.target.solarsystem.AstroTarget
+import com.ayaigi.astrcalc.target.solarsystem.SolarPhase
+import com.ayaigi.astrcalc.target.solarsystem.SolarSystemCalc
+import com.ayaigi.astrcalc.target.solarsystem.SolarSystemTargets
 import java.time.Instant
 import kotlin.math.pow
 
@@ -23,7 +27,7 @@ class Moon(override val instant: Instant) : SolarSystemCalc {
         val e = 0.0549f
 
         /**Semi-major axis of Moon's orbit - in km*/
-        val a = com.ayaigi.astrcalc.coorsytems.Distance.fromKm(384401)
+        val a = com.ayaigi.astrcalc.lib.coorsytems.Distance.fromKm(384401)
 
         /**Moon's angular size at distance "a" from earth - in Deg*/
         val Theta0 = 0.5181f.deg
@@ -52,7 +56,7 @@ class Moon(override val instant: Instant) : SolarSystemCalc {
         lat: Degree,
         lon: Degree,
         altitude: Float
-    ): com.ayaigi.astrcalc.coorsytems.EquatorialSystem.RiseAndSet {
+    ): com.ayaigi.astrcalc.lib.coorsytems.EquatorialSystem.RiseAndSet {
         val (riSe0, riSe24) = run {
             val r = distance.toEarthRadii()
             val date0 = instant.startOfDay()
@@ -82,17 +86,17 @@ class Moon(override val instant: Instant) : SolarSystemCalc {
         val As = riSe0.As.average(riSe24.As)
         val hA = riSe0.hA.average(riSe24.hA)
 
-        return com.ayaigi.astrcalc.coorsytems.EquatorialSystem.RiseAndSet(rise, set, Ar, As, hA)
+        return com.ayaigi.astrcalc.lib.coorsytems.EquatorialSystem.RiseAndSet(rise, set, Ar, As, hA)
     }
 
-    override val position: com.ayaigi.astrcalc.coorsytems.EquatorialSystem by lazy {
+    override val position: com.ayaigi.astrcalc.lib.coorsytems.EquatorialSystem by lazy {
         position()
     }
-    override val distance: com.ayaigi.astrcalc.coorsytems.Distance by lazy {
+    override val distance: com.ayaigi.astrcalc.lib.coorsytems.Distance by lazy {
         distance()
     }
 
-    private fun distance(): com.ayaigi.astrcalc.coorsytems.Distance = a * disA
+    private fun distance(): com.ayaigi.astrcalc.lib.coorsytems.Distance = a * disA
 
     /** Distance as Fraction of a */
     private val disA: Float by lazy {
@@ -122,11 +126,11 @@ class Moon(override val instant: Instant) : SolarSystemCalc {
         return SolarPhase(F0, F0 > F1)
     }
 
-    private fun position(): com.ayaigi.astrcalc.coorsytems.EquatorialSystem =
+    private fun position(): com.ayaigi.astrcalc.lib.coorsytems.EquatorialSystem =
         ecliptic().toEquatorialSys(instant)
 
 
-    private fun ecliptic(): com.ayaigi.astrcalc.coorsytems.EclipticSystem {
+    private fun ecliptic(): com.ayaigi.astrcalc.lib.coorsytems.EclipticSystem {
         val (_, _, l3, N2, _) = positionValues
 
         val Lambda = run {
@@ -143,7 +147,7 @@ class Moon(override val instant: Instant) : SolarSystemCalc {
             val p2 = i.sin()
             Degree.aSin(p1 * p2)
         }
-        return com.ayaigi.astrcalc.coorsytems.EclipticSystem(Lambda, Betta)
+        return com.ayaigi.astrcalc.lib.coorsytems.EclipticSystem(Lambda, Betta)
     }
 
     val positionValues: MoonValues by lazy {

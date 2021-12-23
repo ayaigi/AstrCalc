@@ -1,4 +1,4 @@
-package com.ayaigi.astrcalc.units
+package com.ayaigi.astrcalc.lib.units
 
 sealed interface AstronomicalUnit {
     /**

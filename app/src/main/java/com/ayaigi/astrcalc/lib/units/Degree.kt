@@ -1,4 +1,4 @@
-package com.ayaigi.astrcalc.units
+package com.ayaigi.astrcalc.lib.units
 
 import kotlin.math.absoluteValue
 import kotlin.math.atan2

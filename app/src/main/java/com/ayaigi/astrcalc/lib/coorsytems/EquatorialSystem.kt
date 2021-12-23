@@ -1,7 +1,7 @@
-package com.ayaigi.astrcalc.coorsytems
+package com.ayaigi.astrcalc.lib.coorsytems
 
 import com.ayaigi.astrcalc.core.Observer
-import com.ayaigi.astrcalc.units.*
+import com.ayaigi.astrcalc.lib.units.*
 import java.time.Instant
 
 data class EquatorialSystem(val RightAscension: Hour, val Declination: Degree) {

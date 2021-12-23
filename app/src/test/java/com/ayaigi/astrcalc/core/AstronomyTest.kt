@@ -1,7 +1,7 @@
 package com.ayaigi.astrcalc.core
 
-import com.ayaigi.astrcalc.solarsystem.SolarSystemTargets
-import com.ayaigi.astrcalc.units.deg
+import com.ayaigi.astrcalc.target.solarsystem.SolarSystemTargets
+import com.ayaigi.astrcalc.lib.units.deg
 
 import org.junit.Test
 import java.time.OffsetDateTime

@@ -1,4 +1,4 @@
-package com.ayaigi.astrcalc.solarsystem
+package com.ayaigi.astrcalc.target.solarsystem
 
 import java.lang.Exception
 

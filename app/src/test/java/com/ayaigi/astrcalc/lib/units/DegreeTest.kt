@@ -1,6 +1,4 @@
-package com.ayaigi.astrcalc.units
-
-import org.junit.Test
+package com.ayaigi.astrcalc.lib.units
 
 fun main() {
     format()

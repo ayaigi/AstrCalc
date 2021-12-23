@@ -1,7 +1,7 @@
-package com.ayaigi.astrcalc.solarsystem
+package com.ayaigi.astrcalc.target.solarsystem
 
-import com.ayaigi.astrcalc.units.Degree
-import com.ayaigi.astrcalc.units.deg
+import com.ayaigi.astrcalc.lib.units.Degree
+import com.ayaigi.astrcalc.lib.units.deg
 
 enum class Planets(
     val id: Int,

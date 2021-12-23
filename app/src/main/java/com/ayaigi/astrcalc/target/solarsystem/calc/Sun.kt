@@ -1,7 +1,11 @@
-package com.ayaigi.astrcalc.solarsystem
+package com.ayaigi.astrcalc.target.solarsystem.calc
 
-import com.ayaigi.astrcalc.units.*
-import com.ayaigi.astrcalc.cons.PI
+import com.ayaigi.astrcalc.lib.units.*
+import com.ayaigi.astrcalc.lib.cons.PI
+import com.ayaigi.astrcalc.target.solarsystem.AstroTarget
+import com.ayaigi.astrcalc.target.solarsystem.SolarPhase
+import com.ayaigi.astrcalc.target.solarsystem.SolarSystemCalc
+import com.ayaigi.astrcalc.target.solarsystem.SolarSystemTargets
 import java.time.Instant
 import kotlin.math.*
 
@@ -13,7 +17,7 @@ class Sun(override val instant: Instant) : SolarSystemCalc {
         internal val epsilonG = 278.83354f.deg
         internal val omegaG = 282.596403f.deg
         internal val rho = 0.016718f
-        internal val r0 = com.ayaigi.astrcalc.coorsytems.Distance.fromAU(1)
+        internal val r0 = com.ayaigi.astrcalc.lib.coorsytems.Distance.fromAU(1)
         internal val Theta0 = 0.533128f.deg
 
         /**
@@ -39,23 +43,23 @@ class Sun(override val instant: Instant) : SolarSystemCalc {
         }
     }
 
-    override val position: com.ayaigi.astrcalc.coorsytems.EquatorialSystem by lazy {
+    override val position: com.ayaigi.astrcalc.lib.coorsytems.EquatorialSystem by lazy {
         position()
     }
-    override val distance: com.ayaigi.astrcalc.coorsytems.Distance by lazy {
+    override val distance: com.ayaigi.astrcalc.lib.coorsytems.Distance by lazy {
         distance()
     }
 
-    private fun position(): com.ayaigi.astrcalc.coorsytems.EquatorialSystem = ecliptic.toEquatorialSys(instant)
+    private fun position(): com.ayaigi.astrcalc.lib.coorsytems.EquatorialSystem = ecliptic.toEquatorialSys(instant)
 
-    val ecliptic: com.ayaigi.astrcalc.coorsytems.EclipticSystem by lazy {
+    val ecliptic: com.ayaigi.astrcalc.lib.coorsytems.EclipticSystem by lazy {
         ecliptic()
     }
 
     private fun ecliptic() =
-        com.ayaigi.astrcalc.coorsytems.EclipticSystem(positionValues.Lambda, 0f.deg)
+        com.ayaigi.astrcalc.lib.coorsytems.EclipticSystem(positionValues.Lambda, 0f.deg)
 
-    private fun distance(): com.ayaigi.astrcalc.coorsytems.Distance {
+    private fun distance(): com.ayaigi.astrcalc.lib.coorsytems.Distance {
         return r0 / paraF
     }
 
@@ -100,7 +104,7 @@ class Sun(override val instant: Instant) : SolarSystemCalc {
         lat: Degree,
         lon: Degree,
         altitude: Float
-    ): com.ayaigi.astrcalc.coorsytems.EquatorialSystem.RiseAndSet {
+    ): com.ayaigi.astrcalc.lib.coorsytems.EquatorialSystem.RiseAndSet {
         val posi0 = run {
             val instant = instant.startOfDay()
             Sun(instant).position
@@ -131,6 +135,6 @@ class Sun(override val instant: Instant) : SolarSystemCalc {
         val hA = riSe0.hA.deg().averageCircle(riSe24.hA.deg())
         val STr = SiderealTime(tS - delta)
         val STs = SiderealTime(tR - delta)
-        return com.ayaigi.astrcalc.coorsytems.EquatorialSystem.RiseAndSet(STr, STs, AziR, AziS, hA.hour())
+        return com.ayaigi.astrcalc.lib.coorsytems.EquatorialSystem.RiseAndSet(STr, STs, AziR, AziS, hA.hour())
     }
 }

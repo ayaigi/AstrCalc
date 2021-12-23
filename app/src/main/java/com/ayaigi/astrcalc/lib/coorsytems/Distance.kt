@@ -1,6 +1,6 @@
-package com.ayaigi.astrcalc.coorsytems
+package com.ayaigi.astrcalc.lib.coorsytems
 
-import com.ayaigi.astrcalc.units.invalid
+import com.ayaigi.astrcalc.lib.units.invalid
 import java.time.LocalTime
 import kotlin.math.roundToInt
 

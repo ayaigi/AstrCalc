@@ -1,11 +1,12 @@
-package com.ayaigi.astrcalc.solarsystem
+package com.ayaigi.astrcalc.target
 
-import com.ayaigi.astrcalc.coorsytems.EquatorialSystem
+import com.ayaigi.astrcalc.lib.coorsytems.EquatorialSystem
 import com.ayaigi.astrcalc.core.Observer
-import com.ayaigi.astrcalc.units.Degree
+import com.ayaigi.astrcalc.lib.units.Degree
+import com.ayaigi.astrcalc.target.solarsystem.AstroTarget
 import java.time.Instant
 
-sealed interface AstroCalcTarget {
+interface AstroCalcTarget {
     val id: AstroTarget
     val position: EquatorialSystem
     val instant: Instant

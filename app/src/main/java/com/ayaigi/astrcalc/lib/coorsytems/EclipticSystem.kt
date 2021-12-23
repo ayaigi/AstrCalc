@@ -1,7 +1,7 @@
-package com.ayaigi.astrcalc.coorsytems
+package com.ayaigi.astrcalc.lib.coorsytems
 
-import com.ayaigi.astrcalc.units.julianDay
-import com.ayaigi.astrcalc.units.Degree
+import com.ayaigi.astrcalc.lib.units.julianDay
+import com.ayaigi.astrcalc.lib.units.Degree
 import java.time.Instant
 import kotlin.math.pow
 

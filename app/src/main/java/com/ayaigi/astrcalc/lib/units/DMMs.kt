@@ -1,4 +1,4 @@
-package com.ayaigi.astrcalc.units
+package com.ayaigi.astrcalc.lib.units
 
 import java.time.LocalTime
 import kotlin.math.absoluteValue

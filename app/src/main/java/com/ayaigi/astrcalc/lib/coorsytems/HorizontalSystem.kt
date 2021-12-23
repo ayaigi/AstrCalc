@@ -1,7 +1,7 @@
-package com.ayaigi.astrcalc.coorsytems
+package com.ayaigi.astrcalc.lib.coorsytems
 
-import com.ayaigi.astrcalc.units.SiderealTime
-import com.ayaigi.astrcalc.units.Degree
+import com.ayaigi.astrcalc.lib.units.SiderealTime
+import com.ayaigi.astrcalc.lib.units.Degree
 
 data class HorizontalSystem(val Azimuth: Degree, val Altitude: Degree) {
     fun toEquatorialSys(lat: Degree, ST: SiderealTime): EquatorialSystem {

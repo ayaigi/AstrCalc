@@ -1,4 +1,4 @@
-package com.ayaigi.astrcalc.units
+package com.ayaigi.astrcalc.lib.units
 
 import java.time.Instant
 import java.time.LocalDate

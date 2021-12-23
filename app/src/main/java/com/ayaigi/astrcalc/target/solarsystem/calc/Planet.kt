@@ -1,9 +1,10 @@
-package com.ayaigi.astrcalc.solarsystem
+package com.ayaigi.astrcalc.target.solarsystem.calc
 
-import com.ayaigi.astrcalc.coorsytems.Distance
-import com.ayaigi.astrcalc.coorsytems.EclipticSystem
-import com.ayaigi.astrcalc.coorsytems.EquatorialSystem
-import com.ayaigi.astrcalc.units.*
+import com.ayaigi.astrcalc.lib.coorsytems.Distance
+import com.ayaigi.astrcalc.lib.coorsytems.EclipticSystem
+import com.ayaigi.astrcalc.lib.coorsytems.EquatorialSystem
+import com.ayaigi.astrcalc.lib.units.*
+import com.ayaigi.astrcalc.target.solarsystem.*
 import java.time.Instant
 import kotlin.math.pow
 
