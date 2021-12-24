@@ -1,11 +1,11 @@
 package com.ayaigi.astrcalc.lib.units
 
 import java.util.*
+import kotlin.math.roundToInt
 
-class Format(val unit: AstronomicalUnit, type: FormatType = FormatType.FromUnit) {
+class Format(val unit: AstronomicalUnit, type: FormatType? = null) {
     companion object {
         enum class FormatType {
-            FromUnit,
             Time,
             Degree,
             None
@@ -13,11 +13,9 @@ class Format(val unit: AstronomicalUnit, type: FormatType = FormatType.FromUnit)
     }
 
     private val dmms = DMMs.fromAsUnit(unit)
-    private val type: FormatType = run {
-        if (type == FormatType.FromUnit) {
-            if (unit is Degree) FormatType.Degree
-            else FormatType.Time
-        } else type
+    private var type: FormatType = run {
+        type ?: if (unit is Degree) FormatType.Degree
+        else FormatType.Time
     }
     private val signChar: Char? = if (dmms.sign == -1) '-' else null
 
@@ -54,13 +52,51 @@ class Format(val unit: AstronomicalUnit, type: FormatType = FormatType.FromUnit)
             format(s)
         }
 
+    /**
+     * Example: 56.2°; 23.4'; 42''
+     */
+    val OneUnit: String
+        get() = run {
+            println(dmms)
+            val s = when {
+                dmms.int > 10 -> {
+                    dmms.int.toString() + "*"
+                }
+                dmms.int >= 1 -> {
+                    "%.1f".format((dmms.int + dmms.min / 60f)) + "*"
+                }
+                dmms.min > 10 -> {
+                    dmms.min.toString() + "'"
+                }
+                dmms.min >= 1 -> {
+                    "%.1f".format((dmms.min + dmms.sec / 60f)) + "'"
+                }
+                dmms.sec >= 10 -> {
+                    dmms.sec.toString() + "''"
+                }
+                dmms.sec >= 1 -> {
+                    "%.1f".format((dmms.sec + dmms.milli / 1000f)) + "''"
+                }
+                dmms.milli >= 100 -> {
+                    (dmms.milli / 100f).roundToInt().toString() + "00" + "ms"
+                }
+                dmms.milli >= 10 -> {
+                    (dmms.milli / 10f).roundToInt().toString() + "0" + "ms"
+                }
+                dmms.milli >= 1 -> {
+                    dmms.milli.toString() + "ms"
+                }
+                else -> throw Exception("invalid: $unit")
+            }
+            format(s)
+        }
+
 
     private fun format(s: String): String {
         val t = when (type) {
             FormatType.Time -> s.replace('*', 'h')
             FormatType.Degree -> s.replace('*', '°')
             FormatType.None -> s.dropWhile { it == '*' }
-            else -> throw Exception("invalid Type")
         }
         return if (signChar != null) "-$t"
         else t

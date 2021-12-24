@@ -1,5 +1,6 @@
 package com.ayaigi.astrcalc.lib.coorsytems
 
+import com.ayaigi.astrcalc.lib.units.Hour
 import com.ayaigi.astrcalc.lib.units.invalid
 import java.time.LocalTime
 import kotlin.math.roundToInt
@@ -47,8 +48,8 @@ data class Distance private constructor(private val value: Float) { //value in m
         }
     }
 
-    fun lightTime() : LocalTime {
-        return LocalTime.ofSecondOfDay((value / 3E8).toLong())
+    fun lightTime() : Hour {
+        return Hour(value / 3E8.toFloat())
     }
 
     operator fun div(v: Float): Distance = Distance(value / v)
