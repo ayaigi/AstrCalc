@@ -1,22 +1,30 @@
 package com.ayaigi.astrcalc.core
 
-import com.ayaigi.astrcalc.target.solarsystem.AstroTarget
-import com.ayaigi.astrcalc.target.solarsystem.SolarSystemCalc
-import com.ayaigi.astrcalc.target.solarsystem.*
 import com.ayaigi.astrcalc.lib.units.Degree
+import com.ayaigi.astrcalc.lib.units.deg
 import com.ayaigi.astrcalc.target.AstroCalcTarget
+import com.ayaigi.astrcalc.target.solarsystem.AstroTarget
+import com.ayaigi.astrcalc.target.solarsystem.InvalidTargetExpression
+import com.ayaigi.astrcalc.target.solarsystem.SolarSystemCalc
+import com.ayaigi.astrcalc.target.solarsystem.SolarSystemTargets
 import com.ayaigi.astrcalc.target.solarsystem.calc.Moon
 import com.ayaigi.astrcalc.target.solarsystem.calc.Planet
 import com.ayaigi.astrcalc.target.solarsystem.calc.Sun
 import java.time.Instant
 import java.time.OffsetDateTime
+import java.time.ZoneOffset
 
 class Astronomy private constructor(
     val instant: OffsetDateTime,
     val observer: Observer
 ) {
     companion object {
-        operator fun invoke(instant: OffsetDateTime, Observer: Observer) = Astronomy(instant, Observer)
+
+        val sample1: Astronomy
+            get() = Astronomy(Instant.EPOCH.atOffset(ZoneOffset.UTC), Observer(50.deg, 0.deg, 10f))
+
+        operator fun invoke(instant: OffsetDateTime, Observer: Observer) =
+            Astronomy(instant, Observer)
 
         operator fun invoke(
             instant: OffsetDateTime,
@@ -37,9 +45,11 @@ class Astronomy private constructor(
                 else -> throw InvalidTargetExpression("targetId: $id")
             }
         }
+
         private fun targetFromId(id: Int, instant: Instant): AstroCalcTarget {
-            val t = if(SolarSystemTargets.SolarSystemIds.contains(id)) SolarSystemTargets.fromId(id)
-            else TODO("Not yet implemented")
+            val t =
+                if (SolarSystemTargets.SolarSystemIds.contains(id)) SolarSystemTargets.fromId(id)
+                else TODO("Not yet implemented")
             return solarCalcByTarget(t.id, instant)
         }
     }
@@ -53,8 +63,16 @@ class Astronomy private constructor(
      */
     fun calc(target: AstroTarget): AstronomicalResults {
         return when {
-            target.isSolar -> SolarResult(instant, observer, solarCalcByTarget(target.id, instant.toInstant()))
-            else -> AstronomicalResult(instant, observer, targetFromId(target.id, instant.toInstant()))
+            target.isSolar -> SolarResult(
+                instant,
+                observer,
+                solarCalcByTarget(target.id, instant.toInstant())
+            )
+            else -> AstronomicalResult(
+                instant,
+                observer,
+                targetFromId(target.id, instant.toInstant())
+            )
         }
     }
 }
