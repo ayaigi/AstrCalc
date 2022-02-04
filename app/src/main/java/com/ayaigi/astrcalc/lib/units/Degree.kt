@@ -17,8 +17,8 @@ data class Degree(override val value: Float) : AstronomicalUnit {
     fun correct360(): Degree {
         var d = value
         while (d > 360f || d < 0f) {
-            if (d > 360f) d += 360f
-            if (d < 0f) d -= 360f
+            if (d > 360f) d -= 360f
+            if (d < 0f) d += 360f
         }
         return Degree(d)
     }
