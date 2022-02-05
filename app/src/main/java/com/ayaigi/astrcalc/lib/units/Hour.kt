@@ -17,7 +17,8 @@ data class Hour (override val value: Float) : AstronomicalUnit {
     fun toDecimalDay() = value / 24
 
     companion object {
-        fun fromLocalTime(v: LocalTime): Hour = DMMs.fromLocalTime(v).toDecimalH()
+        fun fromLocalTime(v: LocalTime): Hour = DMMs.fromLocalTime(v).toHour()
+        fun of(int: Int, min: Int, sec: Int, milli: Int = 0, sign: Int = 1) = DMMs(int, min, sec, sign, milli).toHour()
     }
 
     fun correct24(): Hour {

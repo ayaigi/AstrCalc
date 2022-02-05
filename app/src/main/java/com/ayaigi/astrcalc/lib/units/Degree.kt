@@ -16,9 +16,13 @@ data class Degree(override val value: Float) : AstronomicalUnit {
 
     fun correct360(): Degree {
         var d = value
-        while (d > 360f || d < 0f) {
-            if (d > 360f) d -= 360f
-            if (d < 0f) d += 360f
+        var big = d > 360f
+        var small = d < 0f
+        while (big || small) {
+            if (big) d -= 360f
+            if (small) d += 360f
+            big = d > 360f
+            small = d < 0f
         }
         return Degree(d)
     }
@@ -32,14 +36,14 @@ data class Degree(override val value: Float) : AstronomicalUnit {
         fun aTan2(y: Float, x: Float): Degree {
             return Degree(atan2(y, x) * (180 / PI)).correct360()
         }
-
+        fun of(int: Int, min: Int, sec: Int, milli: Int = 0, sign: Int = 1) = DMMs(int, min, sec, sign, milli).toDegree()
     }
 
-    internal fun toRad() = (PI / 180) * value
+    fun toRadians() = (PI / 180) * value
 
-    fun cos(): Float = mCos(toRad())
-    fun sin(): Float = mSin(toRad())
-    fun tan(): Float = mTan(toRad())
+    fun cos(): Float = mCos(toRadians())
+    fun sin(): Float = mSin(toRadians())
+    fun tan(): Float = mTan(toRadians())
 
     override fun format(): Format = Format(this)
 

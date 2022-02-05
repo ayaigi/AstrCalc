@@ -16,7 +16,7 @@ class Planet : SolarSystemCalc {
         }
     }
 
-    override val instant: Instant
+    override lateinit var instant: Instant
     val planet: Planets
 
     constructor(planet: Planets, instant: Instant) {
@@ -32,34 +32,7 @@ class Planet : SolarSystemCalc {
     override val id: AstroTarget
         get() = SolarSystemTargets.fromId(planet.id)
 
-    override val position: EquatorialSystem = position()
-
-    override val distance: Distance by lazy {
-        distance()
-    }
-
-    private fun distance(): Distance {
-        val (r, R, l, L) = positionValues
-        val p2 = R.pow(2) + r.pow(2) - (2 * R * r * (l - L).cos())
-        return Distance.fromAU(p2.pow(0.5f))
-    }
-
-
-    override val angularSize: Degree by lazy {
-        angularSize()
-    }
-
-    private fun angularSize(): Degree {
-        return Degree(planet.angularSize1AUTheta0 / distance.toAU())
-    }
-
-    fun position(): EquatorialSystem = ecliptic().toEquatorialSys(instant)
-
-    val ecliptic: EclipticSystem by lazy {
-        ecliptic()
-    }
-
-    private fun ecliptic(): EclipticSystem {
+    private val ecliptic: EclipticSystem = run {
         val (rp, re, lp, le) = positionValues
 
         val psi = run {
@@ -103,7 +76,19 @@ class Planet : SolarSystemCalc {
             val x = (l2 - le).sin() * re
             Degree.aTan(y / x)
         }
-        return EclipticSystem(Lambda, Betta)
+        EclipticSystem(Lambda, Betta)
+    }
+
+    override val position: EquatorialSystem = ecliptic.toEquatorialSys(instant)
+
+    override val distance: Distance = run {
+        val (r, R, l, L) = positionValues
+        val p2 = R.pow(2) + r.pow(2) - (2 * R * r * (l - L).cos())
+        Distance.fromAU(p2.pow(0.5f))
+    }
+
+    override fun angularSize(): Degree {
+        return Degree(planet.angularSize1AUTheta0 / distance.toAU())
     }
 
     override fun phase(): SolarPhase {
@@ -118,11 +103,7 @@ class Planet : SolarSystemCalc {
         return SolarPhase(F0, F0 > F1)
     }
 
-    val positionValues: PlanetValues by lazy {
-        positionValues()
-    }
-
-    private fun positionValues(): PlanetValues {
+    private val positionValues: PlanetValues = run {
         val D = instant.epochDay80()
         val vp = calcV(D)
         var lp = (vp + planet.longPerihelionOmega).correct360()
@@ -154,7 +135,7 @@ class Planet : SolarSystemCalc {
         val ve = calcV(D, earth)
         val le = (ve + earth.longPerihelionOmega).correct360()
         val re = calcR(ve, earth)
-        return PlanetValues(rp, re, lp, le)
+        PlanetValues(rp, re, lp, le)
     }
 
     data class PlanetValues(val rp: Float, val re: Float, val lp: Degree, val le: Degree)
@@ -175,7 +156,6 @@ class Planet : SolarSystemCalc {
             return y / x
         }
     }
-
 
     override fun riseAndSet(
         lat: Degree,

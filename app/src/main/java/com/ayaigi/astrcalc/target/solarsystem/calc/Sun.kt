@@ -1,7 +1,10 @@
 package com.ayaigi.astrcalc.target.solarsystem.calc
 
-import com.ayaigi.astrcalc.lib.units.*
 import com.ayaigi.astrcalc.lib.cons.PI
+import com.ayaigi.astrcalc.lib.coorsytems.Distance
+import com.ayaigi.astrcalc.lib.coorsytems.EclipticSystem
+import com.ayaigi.astrcalc.lib.coorsytems.EquatorialSystem
+import com.ayaigi.astrcalc.lib.units.*
 import com.ayaigi.astrcalc.target.solarsystem.AstroTarget
 import com.ayaigi.astrcalc.target.solarsystem.SolarPhase
 import com.ayaigi.astrcalc.target.solarsystem.SolarSystemCalc
@@ -25,7 +28,7 @@ class Sun(override val instant: Instant) : SolarSystemCalc {
          */
         fun routineR2(M: Degree, rho: Float): Pair<Degree, Degree> {
             val epsilon = 10E-6
-            val M = M.value * (180 / PI)
+            val M = M.toRadians()// * (180 / PI)
             var E = M
             var decli = E - rho * sin(E) - M
             var delta: Float
@@ -43,56 +46,36 @@ class Sun(override val instant: Instant) : SolarSystemCalc {
         }
     }
 
-    override val position: com.ayaigi.astrcalc.lib.coorsytems.EquatorialSystem by lazy {
-        position()
-    }
-    override val distance: com.ayaigi.astrcalc.lib.coorsytems.Distance by lazy {
-        distance()
-    }
+    internal val positionValues: SunValues = positionValues()
 
-    private fun position(): com.ayaigi.astrcalc.lib.coorsytems.EquatorialSystem = ecliptic.toEquatorialSys(instant)
+    internal val ecliptic: EclipticSystem =
+        EclipticSystem(positionValues.Lambda, 0f.deg)
 
-    val ecliptic: com.ayaigi.astrcalc.lib.coorsytems.EclipticSystem by lazy {
-        ecliptic()
-    }
+    override val position: EquatorialSystem =
+        ecliptic.toEquatorialSys(instant)
 
-    private fun ecliptic() =
-        com.ayaigi.astrcalc.lib.coorsytems.EclipticSystem(positionValues.Lambda, 0f.deg)
-
-    private fun distance(): com.ayaigi.astrcalc.lib.coorsytems.Distance {
-        return r0 / paraF
-    }
-
-    override val angularSize: Degree by lazy {
-        angularSize()
-    }
-
-    private fun angularSize(): Degree {
-        return Theta0 * paraF
-    }
-
-    private val paraF: Float by lazy {
-        paraF()
-    }
-
-    private fun paraF(): Float {
+    private val paraF: Float = run {
         val (_, v, _) = positionValues
         val y = 1 + rho * v.cos()
         val x = 1 - rho.pow(2)
-        return y / x
+        y / x
+    }
+
+    override val distance: Distance = r0 / paraF
+
+    override fun angularSize(): Degree {
+        return Theta0 * paraF
     }
 
     override fun phase(): SolarPhase = SolarPhase(1f, true)
 
-    val positionValues: SunValues by lazy {
-        positionValues()
-    }
 
     private fun positionValues(): SunValues {
         val D = instant.epochDay80()
         val N = Degree((360f / 365.2422f) * D).correct360()
         val M = (N + epsilonG - omegaG).correct360()
         val R2 = routineR2(M, rho)
+        val eR = R2.first.toRadians()
         val v = R2.second
         val Lambda = (v + omegaG).correct360()
         return SunValues(M, v, Lambda)
@@ -135,6 +118,12 @@ class Sun(override val instant: Instant) : SolarSystemCalc {
         val hA = riSe0.hA.deg().averageCircle(riSe24.hA.deg())
         val STr = SiderealTime(tS - delta)
         val STs = SiderealTime(tR - delta)
-        return com.ayaigi.astrcalc.lib.coorsytems.EquatorialSystem.RiseAndSet(STr, STs, AziR, AziS, hA.hour())
+        return com.ayaigi.astrcalc.lib.coorsytems.EquatorialSystem.RiseAndSet(
+            STr,
+            STs,
+            AziR,
+            AziS,
+            hA.hour()
+        )
     }
 }

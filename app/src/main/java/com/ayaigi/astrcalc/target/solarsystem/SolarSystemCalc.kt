@@ -5,7 +5,7 @@ import com.ayaigi.astrcalc.lib.units.Degree
 import com.ayaigi.astrcalc.target.AstroCalcTarget
 
 interface SolarSystemCalc : AstroCalcTarget {
-    val angularSize: Degree
+    fun angularSize(): Degree
     //override val position: EquatorialSystem
     val distance: Distance
     fun phase(): SolarPhase

@@ -42,10 +42,20 @@ class AstronomicalResult(
 }
 
 class SolarResult(
-    final override val instant: OffsetDateTime,
+    override val instant: OffsetDateTime,
     private val observer: Observer,
     private val Target: SolarSystemCalc
 ) : SolarResults {
+
+    override fun toString(): String {
+        return id.toString() + "\n" +
+                position.toString() + "\n" +
+                positionEq.toString() + "\n" +
+                riseAndSet.toString() + "\n" +
+                "Phase=" + phase.toString() + "\n" +
+                "Distance=" + distance.toString() + "\n" +
+                "Size=" + angularSize.toString()
+    }
 
     private val siderealTime = SiderealTime.fromOffsetDateTime(instant, observer.lon)
 
@@ -78,6 +88,6 @@ class SolarResult(
         get() = Target.distance
 
     override val angularSize: Degree
-        get() = Target.angularSize
+        get() = Target.angularSize()
 
 }

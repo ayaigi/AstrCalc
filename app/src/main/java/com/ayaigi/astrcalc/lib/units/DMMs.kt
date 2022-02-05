@@ -34,12 +34,12 @@ internal data class DMMs(
         return t * sign
     }
 
-    fun toDecimalH() = Hour(toDecimal())
+    fun toHour() = Hour(toDecimal())
 
-    fun toDecimalD() = Degree(toDecimal())
+    fun toDegree() = Degree(toDecimal())
 
     fun toLocalTime(): LocalTime {
-        return if (toDecimalH().correct24() > 24f.hour) fromAsUnit(toDecimalD().correct360() / 15f).toLocalTime()
+        return if (toHour().correct24() > 24f.hour) fromAsUnit(toDegree().correct360() / 15f).toLocalTime()
         else LocalTime.of(int, min, sec)
     }
 }

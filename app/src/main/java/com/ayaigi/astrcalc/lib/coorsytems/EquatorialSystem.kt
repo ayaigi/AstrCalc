@@ -18,7 +18,7 @@ data class EquatorialSystem(val RightAscension: Hour, val Declination: Degree) {
             Degree.aCos(o / u)
         }
         if (hA.sin() > 0) {
-            azimuth = Degree(360f) - azimuth
+            azimuth = 360.deg - azimuth
         }
         return HorizontalSystem(azimuth, altitude)
     }
