@@ -3,6 +3,14 @@ package com.ayaigi.astrcalc.lib.units
 import java.util.*
 import kotlin.math.roundToInt
 
+/**
+ * IntDDMin -> 56..32
+ * Int2D -> 56.32
+ * INT_Z_MINm -> 56° 37m
+ * IntZMin_ -> 56° 37' - 12h 42'
+ * IntZMin_Sec__ -> 56° 37' 43'' - 12h 42' 32''
+ * OneUnit -> 56.2°; 23.4'; 42''
+ */
 class Format(val unit: AstronomicalUnit, type: FormatType? = null) {
     companion object {
         enum class FormatType {
@@ -18,6 +26,12 @@ class Format(val unit: AstronomicalUnit, type: FormatType? = null) {
         else FormatType.Time
     }
     private val signChar: Char? = if (dmms.sign == -1) '-' else null
+
+    /**
+     * Example: 56..32
+     */
+    val IntDDMin
+        get() = "${dmms.int}..${dmms.min}"
 
     /**
      * Example: 56.32
@@ -44,7 +58,7 @@ class Format(val unit: AstronomicalUnit, type: FormatType? = null) {
         }
 
     /**
-     * Example: 56° 37' - 12h 42'
+     * Example: 56° 37' 43'' - 12h 42' 32''
      */
     val IntZMin_Sec__: String
         get() = run {
@@ -58,7 +72,16 @@ class Format(val unit: AstronomicalUnit, type: FormatType? = null) {
     val OneUnit: String
         get() = run {
             println(dmms)
-            val s = when {
+            val s: String = when {
+                dmms.int > (24 * 30) -> {
+                    (dmms.int / (24 * 30)).toString() + "d"
+                }
+                dmms.int > (24 * 10) -> {
+                    (dmms.int / 24).toString() + "d"
+                }
+                dmms.int > (24) -> {
+                    "%.1f".format(dmms.int / 24f) + "d"
+                }
                 dmms.int > 10 -> {
                     dmms.int.toString() + "*"
                 }
