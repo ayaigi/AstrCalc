@@ -8,25 +8,13 @@ import com.ayaigi.astrcalc.target.solarsystem.*
 import java.time.Instant
 import kotlin.math.pow
 
-class Planet : SolarSystemCalc {
+class Planet(val planet: Planets, override val instant: Instant) : SolarSystemCalc {
 
     companion object {
         fun getPlanet(i: Int) = Planets.values().first {
             it.id == i
         }
-    }
-
-    override lateinit var instant: Instant
-    val planet: Planets
-
-    constructor(planet: Planets, instant: Instant) {
-        this.instant = instant
-        this.planet = planet
-    }
-
-    constructor(planetId: Int, instant: Instant) {
-        this.instant = instant
-        this.planet = getPlanet(planetId)
+        operator fun invoke(planetId: Int, instant: Instant) = Planet(getPlanet(planetId), instant)
     }
 
     override val id: AstroTarget
