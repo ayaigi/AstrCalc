@@ -32,6 +32,42 @@ class Planet : SolarSystemCalc {
     override val id: AstroTarget
         get() = SolarSystemTargets.fromId(planet.id)
 
+
+    private val positionValues: PlanetValues = run {
+        val D = instant.epochDay80()
+        val vp = calcV(D)
+        var lp = (vp + planet.longPerihelionOmega).correct360()
+        if (planet == Planets.Jupiter || planet == Planets.Saturn) {
+            val T = (instant.julianDay() - 2415020) / 36525
+            val A = T / 5 + 0.1f
+            val P = (237.47555f + 3034.9061f * T).deg
+            val Q = (265.91650f + 1222.1139f * T).deg
+            val V = Q * 5 - P * 2
+            val B = Q - P
+            val dL: Degree = if (planet.id == 5) {
+                val t1 = (0.3314f - 0.0103f * A).deg * V.sin()
+                val t2 = (0.0644f * A * V.cos()).deg
+                t1 - t2
+            } else {
+                val t1 = V.cos() * (0.1609f * A - 0.0105f)
+                val t2 = V.sin() * (0.0182f * A - 0.8142f)
+                val t3 = B.sin() * 0.1488f - 0.0408f * (B * 2).sin()
+                val t4 = B.sin() * 0.0856f * Q.cos()
+                val t5 = B.cos() * 0.0813f * Q.sin()
+                (t1 + t2 - t3 + t4 + t5).deg
+            }
+            lp += dL
+        }
+
+        val rp = calcR(vp)
+
+        val earth = getPlanet(3)
+        val ve = calcV(D, earth)
+        val le = (ve + earth.longPerihelionOmega).correct360()
+        val re = calcR(ve, earth)
+        PlanetValues(rp, re, lp, le)
+    }
+
     private val ecliptic: EclipticSystem = run {
         val (rp, re, lp, le) = positionValues
 
@@ -101,41 +137,6 @@ class Planet : SolarSystemCalc {
         val F0: Float = F(Planet(planet, instant).ecliptic.Lambda)
         val F1: Float = F(Planet(planet, instant.plusSeconds(86400)).ecliptic.Lambda)
         return SolarPhase(F0, F0 > F1)
-    }
-
-    private val positionValues: PlanetValues = run {
-        val D = instant.epochDay80()
-        val vp = calcV(D)
-        var lp = (vp + planet.longPerihelionOmega).correct360()
-        if (planet == Planets.Jupiter || planet == Planets.Saturn) {
-            val T = (instant.julianDay() - 2415020) / 36525
-            val A = T / 5 + 0.1f
-            val P = (237.47555f + 3034.9061f * T).deg
-            val Q = (265.91650f + 1222.1139f * T).deg
-            val V = Q * 5 - P * 2
-            val B = Q - P
-            val dL: Degree = if (planet.id == 5) {
-                val t1 = (0.3314f - 0.0103f * A).deg * V.sin()
-                val t2 = (0.0644f * A * V.cos()).deg
-                t1 - t2
-            } else {
-                val t1 = V.cos() * (0.1609f * A - 0.0105f)
-                val t2 = V.sin() * (0.0182f * A - 0.8142f)
-                val t3 = B.sin() * 0.1488f - 0.0408f * (B * 2).sin()
-                val t4 = B.sin() * 0.0856f * Q.cos()
-                val t5 = B.cos() * 0.0813f * Q.sin()
-                (t1 + t2 - t3 + t4 + t5).deg
-            }
-            lp += dL
-        }
-
-        val rp = calcR(vp)
-
-        val earth = getPlanet(3)
-        val ve = calcV(D, earth)
-        val le = (ve + earth.longPerihelionOmega).correct360()
-        val re = calcR(ve, earth)
-        PlanetValues(rp, re, lp, le)
     }
 
     data class PlanetValues(val rp: Float, val re: Float, val lp: Degree, val le: Degree)
