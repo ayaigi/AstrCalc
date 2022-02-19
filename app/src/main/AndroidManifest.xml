@@ -4,6 +4,7 @@
     package="com.ayaigi.astrcalc">
 
     <application
+        android:name=".core.Application"
         tools:replace="android:theme"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"

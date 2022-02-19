@@ -48,7 +48,7 @@ class Sun(override val instant: Instant) : SolarSystemCalc {
 
     internal val positionValues: SunValues = positionValues()
 
-    internal val ecliptic: EclipticSystem =
+    override val ecliptic: EclipticSystem =
         EclipticSystem(positionValues.Lambda, 0f.deg)
 
     override val position: EquatorialSystem =

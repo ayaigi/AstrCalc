@@ -1,5 +1,6 @@
 package com.ayaigi.astrcalc.target.solarsystem.calc
 
+import android.util.Log
 import com.ayaigi.astrcalc.lib.coorsytems.Distance
 import com.ayaigi.astrcalc.lib.coorsytems.EclipticSystem
 import com.ayaigi.astrcalc.lib.coorsytems.EquatorialSystem
@@ -96,8 +97,7 @@ class Moon(override val instant: Instant) : SolarSystemCalc {
 
     override val distance: Distance = a * disA
 
-
-    private val ecliptic: EclipticSystem = run {
+    override val ecliptic: EclipticSystem = run {
         val (_, _, l3, N2, _) = positionValues
 
         val Lambda = run {

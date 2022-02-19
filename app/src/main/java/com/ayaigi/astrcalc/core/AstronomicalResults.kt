@@ -1,9 +1,6 @@
 package com.ayaigi.astrcalc.core
 
-import com.ayaigi.astrcalc.lib.coorsytems.Distance
-import com.ayaigi.astrcalc.lib.coorsytems.EquatorialSystem
-import com.ayaigi.astrcalc.lib.coorsytems.HorizontalSystem
-import com.ayaigi.astrcalc.lib.coorsytems.RiseAndSet
+import com.ayaigi.astrcalc.lib.coorsytems.*
 import com.ayaigi.astrcalc.target.AstroCalcTarget
 import com.ayaigi.astrcalc.target.solarsystem.AstroTarget
 import com.ayaigi.astrcalc.target.solarsystem.SolarPhase
@@ -24,6 +21,7 @@ sealed interface SolarResults : AstronomicalResults {
     val phase: SolarPhase
     val distance: Distance
     val angularSize: Degree
+    val eclipticPosi: EclipticSystem
 }
 
 class AstronomicalResult(
@@ -58,6 +56,9 @@ class SolarResult(
     }
 
     private val siderealTime = SiderealTime.fromOffsetDateTime(instant, observer.lon)
+
+    override val eclipticPosi: EclipticSystem
+        get() = Target.ecliptic
 
     override val position: HorizontalSystem
         get() = run {

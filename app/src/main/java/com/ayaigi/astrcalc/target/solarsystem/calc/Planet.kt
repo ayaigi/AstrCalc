@@ -8,7 +8,7 @@ import com.ayaigi.astrcalc.target.solarsystem.*
 import java.time.Instant
 import kotlin.math.pow
 
-class Planet(val planet: Planets, override val instant: Instant) : SolarSystemCalc {
+class Planet private constructor(val planet: Planets, override val instant: Instant) : SolarSystemCalc {
 
     companion object {
         fun getPlanet(i: Int) = Planets.values().first {
@@ -56,7 +56,7 @@ class Planet(val planet: Planets, override val instant: Instant) : SolarSystemCa
         PlanetValues(rp, re, lp, le)
     }
 
-    private val ecliptic: EclipticSystem = run {
+    override val ecliptic: EclipticSystem = run {
         val (rp, re, lp, le) = positionValues
 
         val psi = run {
