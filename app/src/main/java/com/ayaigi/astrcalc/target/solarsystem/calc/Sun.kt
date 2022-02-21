@@ -87,7 +87,7 @@ class Sun(override val instant: Instant) : SolarSystemCalc {
         lat: Degree,
         lon: Degree,
         altitude: Float
-    ): com.ayaigi.astrcalc.lib.coorsytems.EquatorialSystem.RiseAndSet {
+    ): EquatorialSystem.RiseAndSet {
         val posi0 = run {
             val instant = instant.startOfDay()
             Sun(instant).position
@@ -116,9 +116,9 @@ class Sun(override val instant: Instant) : SolarSystemCalc {
             0.0f.deg
         }.hour()
         val hA = riSe0.hA.deg().averageCircle(riSe24.hA.deg())
-        val STr = SiderealTime(tS - delta)
-        val STs = SiderealTime(tR - delta)
-        return com.ayaigi.astrcalc.lib.coorsytems.EquatorialSystem.RiseAndSet(
+        val STr = SiderealTime(tR - delta)
+        val STs = SiderealTime(tS - delta)
+        return EquatorialSystem.RiseAndSet(
             STr,
             STs,
             AziR,

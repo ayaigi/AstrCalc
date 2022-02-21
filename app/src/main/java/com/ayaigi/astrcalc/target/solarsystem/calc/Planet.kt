@@ -179,8 +179,8 @@ class Planet private constructor(val planet: Planets, override val instant: Inst
             0.0f.deg
         }.hour()
         val hA = riSe0.hA.deg().averageCircle(riSe24.hA.deg())
-        val STr = SiderealTime(tS - delta)
-        val STs = SiderealTime(tR - delta)
+        val STr = SiderealTime(tR - delta)
+        val STs = SiderealTime(tS - delta)
         return EquatorialSystem.RiseAndSet(STr, STs, AziR, AziS, hA.hour())
     }
 }
