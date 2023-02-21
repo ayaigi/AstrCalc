@@ -14,26 +14,19 @@ import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
-class Astronomy private constructor(
-    val instant: OffsetDateTime,
-    val observer: Observer
-) {
+
+class Astronomy internal constructor(val geoInstant: GeoInstant) {
     companion object {
-
         val sample1: Astronomy
-            get() = Astronomy(Instant.EPOCH.atOffset(ZoneOffset.UTC), Observer(50.deg, 0.deg, 10f))
-
-        operator fun invoke(instant: OffsetDateTime, Observer: Observer) =
-            Astronomy(instant, Observer)
+            get() = Astronomy(Instant.now().atOffset(ZoneOffset.UTC), 52.4960.deg, (13.2509).deg, 0.0)
 
         operator fun invoke(
             instant: OffsetDateTime,
             Latitude: Degree,
             Longitude: Degree,
-            Altitude: Float
+            Altitude: Double
         ) = Astronomy(
-            instant,
-            Observer(Latitude, Longitude, Altitude)
+            GeoInstant(Latitude, Longitude, Altitude, instant)
         )
 
         private fun solarCalcByTarget(id: Int, instant: Instant): SolarSystemCalc {
@@ -64,14 +57,12 @@ class Astronomy private constructor(
     fun calc(target: AstroTarget): AstronomicalResults {
         return when {
             target.isSolar -> SolarResult(
-                instant,
-                observer,
-                solarCalcByTarget(target.id, instant.toInstant())
+                geoInstant,
+                solarCalcByTarget(target.id, geoInstant.instant.toInstant())
             )
             else -> AstronomicalResult(
-                instant,
-                observer,
-                targetFromId(target.id, instant.toInstant())
+                geoInstant,
+                targetFromId(target.id, geoInstant.instant.toInstant())
             )
         }
     }

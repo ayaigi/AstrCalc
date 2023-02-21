@@ -1,10 +1,14 @@
 package com.ayaigi.astrcalc.lib.coorsytems
 
+import com.ayaigi.astrcalc.core.GeoInstant
 import com.ayaigi.astrcalc.core.Observer
 import com.ayaigi.astrcalc.lib.units.*
 import java.time.Instant
 
 data class EquatorialSystem(val RightAscension: Hour, val Declination: Degree) {
+    override fun toString(): String {
+        return "Eq_Sys(a=${RightAscension.format().Int2D}|${RightAscension.format().IntZMin_Sec__} d=${Declination.format().Int2D}|${Declination.format().IntZMin_Sec__})"
+    }
     fun toHorizonSys(lat: Degree, ST: SiderealTime): HorizontalSystem {
         val hA = (ST.tH() - RightAscension).deg()
         val altitude = run {
@@ -44,18 +48,18 @@ data class EquatorialSystem(val RightAscension: Hour, val Declination: Degree) {
         return EclipticSystem(Lambda, Betta)
     }
 
-    fun riseAndSet(lat: Degree, lon: Degree): RiseAndSet {
+    fun riseAndSet(gI: GeoInstant): RiseAndSet {
         val rightAscension = RightAscension.deg()
 
         val Ar = run {
             val y = Declination.sin()
-            val x = lat.cos()
+            val x = gI.lat.cos()
             Degree.aCos(y / x).correct360()
         }
         val As = (360.deg - Ar).correct360()
 
         val hA = run {
-            val p1 = lat.tan() * Declination.tan() * -1
+            val p1 = gI.lat.tan() * Declination.tan() * -1
             Degree.aCos(p1).hour()
         }
 
@@ -68,14 +72,14 @@ data class EquatorialSystem(val RightAscension: Hour, val Declination: Degree) {
     /**
      * r in Earth-radii
      */
-    fun correctParallax(r: Float, lat: Degree, hourAngle: Degree, altitude: Float): EquatorialSystem {
+    fun correctParallax(r: Double, lat: Degree, hourAngle: Degree, altitude: Double): EquatorialSystem {
         val rightAscension = RightAscension.deg()
 
         val (cos, sin) = run {
-            val u = Degree.aTan(lat.tan() * 0.996647f)
+            val u = Degree.aTan(lat.tan() * 0.996647)
             val h = altitude / 6378140
             val cos = u.cos() + lat.cos() * h
-            val sin = u.sin() * 0.996647f + lat.sin() * h
+            val sin = u.sin() * 0.996647 + lat.sin() * h
             Pair(cos, sin)
         }
 
@@ -96,10 +100,10 @@ data class EquatorialSystem(val RightAscension: Hour, val Declination: Degree) {
         }
         return EquatorialSystem(rightAscension2.hour(), declination2)
     }
-    fun correctParallax(d: Distance, observer: Observer, siderealTime: SiderealTime): EquatorialSystem {
+    fun correctParallax(d: Distance, geoInstant: GeoInstant, siderealTime: SiderealTime): EquatorialSystem {
         val r = d.toEarthRadii()
         val hA = (siderealTime.tH() - RightAscension).deg()
-        return correctParallax(r, observer.lat, hA, observer.altitude)
+        return correctParallax(r, geoInstant.lat, hA, geoInstant.altitude)
     }
 
     data class RiseAndSet(

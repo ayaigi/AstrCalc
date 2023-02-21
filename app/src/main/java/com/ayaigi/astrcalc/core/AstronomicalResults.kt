@@ -7,11 +7,10 @@ import com.ayaigi.astrcalc.target.solarsystem.SolarPhase
 import com.ayaigi.astrcalc.target.solarsystem.SolarSystemCalc
 import com.ayaigi.astrcalc.lib.units.Degree
 import com.ayaigi.astrcalc.lib.units.SiderealTime
-import java.time.OffsetDateTime
 
 sealed interface AstronomicalResults {
     val id: AstroTarget
-    val instant: OffsetDateTime
+    val geoInstant: GeoInstant
     val position: HorizontalSystem
     val positionEq: EquatorialSystem
     val riseAndSet: RiseAndSet
@@ -25,8 +24,7 @@ sealed interface SolarResults : AstronomicalResults {
 }
 
 class AstronomicalResult(
-    override val instant: OffsetDateTime,
-    private val observer: Observer,
+    override val geoInstant: GeoInstant,
     private val Target: AstroCalcTarget
 ) : AstronomicalResults {
     override val id: AstroTarget
@@ -40,10 +38,10 @@ class AstronomicalResult(
 }
 
 class SolarResult(
-    override val instant: OffsetDateTime,
-    private val observer: Observer,
+    override val geoInstant: GeoInstant,
     private val Target: SolarSystemCalc
 ) : SolarResults {
+
 
     override fun toString(): String {
         return id.toString() + "\n" +
@@ -55,7 +53,7 @@ class SolarResult(
                 "Size=" + angularSize.toString()
     }
 
-    private val siderealTime = SiderealTime.fromOffsetDateTime(instant, observer.lon)
+    private val siderealTime = SiderealTime.fromOffsetDateTime(geoInstant)
 
     override val eclipticPosi: EclipticSystem
         get() = Target.ecliptic
@@ -63,16 +61,16 @@ class SolarResult(
     override val position: HorizontalSystem
         get() = run {
             val eq1 = Target.position
-            val eq2 = eq1.correctParallax(distance, observer, siderealTime)
-            val ho = eq2.toHorizonSys(observer.lat, siderealTime)
+            val eq2 = eq1.correctParallax(distance, geoInstant, siderealTime)
+            val ho = eq2.toHorizonSys(geoInstant.lat, siderealTime)
             ho
         }
 
     override val riseAndSet: RiseAndSet
         get() = run {
-            val rsS = Target.riseAndSet(observer)
-            val rL = rsS.STr.convertToLocalTime(instant.toLocalDate(), observer.lon)
-            val sL = rsS.STs.convertToLocalTime(instant.toLocalDate(), observer.lon)
+            val rsS = Target.riseAndSet(geoInstant)
+            val rL = rsS.STr.convertToLocalTime(geoInstant)
+            val sL = rsS.STs.convertToLocalTime(geoInstant)
             RiseAndSet(rL, sL, rsS.Ar, rsS.As, rsS.hA)
         }
 

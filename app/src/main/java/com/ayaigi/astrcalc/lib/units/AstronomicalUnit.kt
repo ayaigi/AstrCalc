@@ -4,7 +4,7 @@ sealed interface AstronomicalUnit {
     /**
      * in Hours / Degrees
      */
-    val value: Float
+    val value: Double
 
     fun decimal() = value
 

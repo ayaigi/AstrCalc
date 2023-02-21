@@ -12,28 +12,28 @@ import kotlin.math.sin as mSin
 import kotlin.math.tan as mTan
 
 
-data class Degree(override val value: Float) : AstronomicalUnit {
+data class Degree(override val value: Double) : AstronomicalUnit {
 
     fun correct360(): Degree {
         var d = value
-        var big = d > 360f
-        var small = d < 0f
+        var big = d > 360
+        var small = d < 0
         while (big || small) {
-            if (big) d -= 360f
-            if (small) d += 360f
-            big = d > 360f
-            small = d < 0f
+            if (big) d -= 360
+            if (small) d += 360
+            big = d > 360
+            small = d < 0
         }
         return Degree(d)
     }
 
     companion object {
-        fun fromRadians(r: Float): Degree = Degree(r * (180 / PI))
-        private const val PI = PId.toFloat()
-        fun aCos(v: Float): Degree = fromRadians(mAcos(v))
-        fun aSin(v: Float): Degree = fromRadians(mAsin(v))
-        fun aTan(v: Float): Degree = fromRadians(mAtan(v))
-        fun aTan2(y: Float, x: Float): Degree {
+        fun fromRadians(r: Double): Degree = Degree(r * (180 / PI))
+        private const val PI = PId
+        fun aCos(v: Double): Degree = fromRadians(mAcos(v))
+        fun aSin(v: Double): Degree = fromRadians(mAsin(v))
+        fun aTan(v: Double): Degree = fromRadians(mAtan(v))
+        fun aTan2(y: Double, x: Double): Degree {
             return Degree(atan2(y, x) * (180 / PI)).correct360()
         }
         fun of(int: Int, min: Int, sec: Int, milli: Int = 0, sign: Int = 1) = DMMs(int, min, sec, sign, milli).toDegree()
@@ -41,9 +41,9 @@ data class Degree(override val value: Float) : AstronomicalUnit {
 
     fun toRadians() = (PI / 180) * value
 
-    fun cos(): Float = mCos(toRadians())
-    fun sin(): Float = mSin(toRadians())
-    fun tan(): Float = mTan(toRadians())
+    fun cos(): Double = mCos(toRadians())
+    fun sin(): Double = mSin(toRadians())
+    fun tan(): Double = mTan(toRadians())
 
     override fun format(): Format = Format(this)
 
@@ -54,16 +54,16 @@ data class Degree(override val value: Float) : AstronomicalUnit {
     fun hour(): Hour = Hour(value / 15)
 
     operator fun div(i: Int): Degree = Degree(value / i)
-    operator fun div(i: Float): Degree = Degree(value / i)
+    operator fun div(i: Double): Degree = Degree(value / i)
     operator fun times(i: Int): Degree = Degree(value * i)
-    operator fun times(i: Float): Degree = Degree(value * i)
+    operator fun times(i: Double): Degree = Degree(value * i)
 
     operator fun minus(i: Degree): Degree = Degree(value - i.value)
     operator fun plus(i: Degree): Degree = Degree(value + i.value)
 
     fun abs(): Degree = Degree(value.absoluteValue)
 
-    fun pow(i: Float) = value.pow(i).deg
+    fun pow(i: Double) = value.pow(i).deg
 
     fun averageCircle(v: Degree): Degree {
         val x = v
@@ -71,11 +71,11 @@ data class Degree(override val value: Float) : AstronomicalUnit {
         return if (div > 180.deg) {
             when {
                 x > v -> {
-                    val toMax = 360f.deg - x
+                    val toMax = 360.deg - x
                     (v + toMax) / 2
                 }
                 x < v -> {
-                    val toMax = 360f.deg - v
+                    val toMax = 360.deg - v
                     (x + toMax) / 2
                 }
                 else -> throw Exception("invalid")
@@ -94,7 +94,7 @@ data class Degree(override val value: Float) : AstronomicalUnit {
 }
 
 
-internal val Float.deg: Degree
+internal val Double.deg: Degree
     get() = Degree(this)
 internal val Int.deg: Degree
-    get() = Degree(this.toFloat())
+    get() = Degree(this.toDouble())

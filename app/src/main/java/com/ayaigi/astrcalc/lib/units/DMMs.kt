@@ -27,10 +27,10 @@ internal data class DMMs(
         fun fromLocalTime(v: LocalTime) = DMMs(v.hour, v.minute, v.second)
     }
 
-    private fun toDecimal(): Float {
-        val s = sec + milli / 1000
-        val m = s / 60f + min
-        val t = m / 60f + int
+    private fun toDecimal(): Double {
+        val s = sec + milli / 1000.0
+        val m = s / 60 + min
+        val t = m / 60 + int
         return t * sign
     }
 
@@ -39,7 +39,7 @@ internal data class DMMs(
     fun toDegree() = Degree(toDecimal())
 
     fun toLocalTime(): LocalTime {
-        return if (toHour().correct24() > 24f.hour) fromAsUnit(toDegree().correct360() / 15f).toLocalTime()
+        return if (toHour().correct24() > 24.hour) fromAsUnit(toDegree().correct360() / 15).toLocalTime()
         else LocalTime.of(int, min, sec)
     }
 }

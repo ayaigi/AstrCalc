@@ -7,7 +7,7 @@ fun main() {
 }
 
 private fun test1() {
-    val deg = 0.000003f.deg
+    val deg = 0.000003.deg
     val f = deg.format().OneUnit
     println(f)
 }

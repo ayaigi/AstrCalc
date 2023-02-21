@@ -1,5 +1,6 @@
 package com.ayaigi.astrcalc.target.solarsystem.calc
 
+import com.ayaigi.astrcalc.core.GeoInstant
 import com.ayaigi.astrcalc.lib.coorsytems.Distance
 import com.ayaigi.astrcalc.lib.coorsytems.EclipticSystem
 import com.ayaigi.astrcalc.lib.coorsytems.EquatorialSystem
@@ -82,7 +83,7 @@ class Planet private constructor(val planet: Planets, override val instant: Inst
                 val x = re - r2 * (le - l2).cos()
                 Degree.aTan(y / x)
             }
-            le + 180f.deg + A
+            le + 180.deg + A
         } else {
             val A = run {
                 val y = (l2 - le).sin() * re
@@ -108,7 +109,7 @@ class Planet private constructor(val planet: Planets, override val instant: Inst
     override val distance: Distance = run {
         val (r, R, l, L) = positionValues
         val p2 = R.pow(2) + r.pow(2) - (2 * R * r * (l - L).cos())
-        Distance.fromAU(p2.pow(0.5f))
+        Distance.fromAU(p2.pow(0.5))
     }
 
     override fun angularSize(): Degree {
@@ -116,20 +117,20 @@ class Planet private constructor(val planet: Planets, override val instant: Inst
     }
 
     override fun phase(): SolarPhase {
-        fun F(Lambda: Degree): Float {
+        fun F(Lambda: Degree): Double {
             val l = positionValues.lp
             val D = l - Lambda
-            return 0.5f * (1 - D.cos())
+            return 0.5 * (1 - D.cos())
         }
 
-        val F0: Float = F(Planet(planet, instant).ecliptic.Lambda)
-        val F1: Float = F(Planet(planet, instant.plusSeconds(86400)).ecliptic.Lambda)
+        val F0: Double = F(Planet(planet, instant).ecliptic.Lambda)
+        val F1: Double = F(Planet(planet, instant.plusSeconds(86400)).ecliptic.Lambda)
         return SolarPhase(F0, F0 > F1)
     }
 
-    data class PlanetValues(val rp: Float, val re: Float, val lp: Degree, val le: Degree)
+    data class PlanetValues(val rp: Double, val re: Double, val lp: Degree, val le: Degree)
 
-    private fun calcV(D: Float, planet: Planets = this.planet): Degree {
+    private fun calcV(D: Double, planet: Planets = this.planet): Degree {
         return planet.run {
             val np = ((360 / 365.2422f) * (D / periodTp)).deg.correct360()
             val mp = np + longEpsilon - longPerihelionOmega
@@ -138,7 +139,7 @@ class Planet private constructor(val planet: Planets, override val instant: Inst
         }
     }
 
-    private fun calcR(v: Degree, planet: Planets = this.planet): Float {
+    private fun calcR(v: Degree, planet: Planets = this.planet): Double {
         planet.run {
             val y = semiMajorAxisAAU * (1 - eccentricityE.pow(2))
             val x = 1 + eccentricityE * v.cos()
@@ -147,9 +148,7 @@ class Planet private constructor(val planet: Planets, override val instant: Inst
     }
 
     override fun riseAndSet(
-        lat: Degree,
-        lon: Degree,
-        altitude: Float
+        gI: GeoInstant
     ): EquatorialSystem.RiseAndSet {
         val posi0 = run {
             val instant = instant.startOfDay()
@@ -159,24 +158,24 @@ class Planet private constructor(val planet: Planets, override val instant: Inst
             val instant = instant.plusDays(1).startOfDay()
             Planet(planet, instant).position
         }
-        val riSe0 = posi0.riseAndSet(lat, lon)
-        val riSe24 = posi24.riseAndSet(lat, lon)
+        val riSe0 = posi0.riseAndSet(gI)
+        val riSe24 = posi24.riseAndSet(gI)
 
         val AziR = riSe0.Ar.averageCircle(riSe24.Ar)
         val AziS = riSe0.As.averageCircle(riSe24.As)
 
         val tR = run {
-            val p1 = riSe0.STr.tH() * 24.07f
-            val p2 = 24.07f.hour + riSe0.STr.tH() - riSe24.STr.tH()
+            val p1 = riSe0.STr.tH() * 24.07
+            val p2 = 24.07.hour + riSe0.STr.tH() - riSe24.STr.tH()
             Hour(p1.value / p2.value)
         }
         val tS = run {
-            val p1 = riSe0.STs.tH() * 24.07f
-            val p2 = 24.07f.hour + riSe0.STs.tH() - riSe24.STs.tH()
+            val p1 = riSe0.STs.tH() * 24.07
+            val p2 = 24.07.hour + riSe0.STs.tH() - riSe24.STs.tH()
             Hour(p1.value / p2.value)
         }
         val delta = run {
-            0.0f.deg
+            0.0.deg
         }.hour()
         val hA = riSe0.hA.deg().averageCircle(riSe24.hA.deg())
         val STr = SiderealTime(tR - delta)

@@ -9,8 +9,8 @@ data class EclipticSystem (val Lambda: Degree, val Betta: Degree){
     companion object {
         internal fun epsilon(instant: Instant): Degree {
             val t = (instant.julianDay() - 2415020) / 36525.0
-            val delta = Degree(((46.845f * t + 0.0059f * t.pow(2) - 0.00181f * t.pow(3)) / 3600).toFloat())
-            return Degree(23.452294f) - delta
+            val delta = Degree(((46.845 * t + 0.0059 * t.pow(2) - 0.00181 * t.pow(3)) / 3600))
+            return Degree(23.452294) - delta
         }
     }
     fun toEquatorialSys(instant: Instant): EquatorialSystem {

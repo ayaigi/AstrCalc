@@ -2,7 +2,7 @@ package com.ayaigi.astrcalc.lib.units
 
 import java.time.LocalTime
 
-data class Hour (override val value: Float) : AstronomicalUnit {
+data class Hour(override val value: Double) : AstronomicalUnit {
 
     override fun format(): Format = Format(this)
 
@@ -23,9 +23,9 @@ data class Hour (override val value: Float) : AstronomicalUnit {
 
     fun correct24(): Hour {
         var t = value
-        while (t > 24f || t < 0f) {
-            if (t > 24f) t -= 24f
-            if (t < 0f) t += 24f
+        while (t > 24 || t < 0) {
+            if (t > 24) t -= 24
+            if (t < 0) t += 24
         }
         return Hour(t)
     }
@@ -33,9 +33,9 @@ data class Hour (override val value: Float) : AstronomicalUnit {
     fun deg(): Degree = Degree(value * 15)
 
     operator fun div(i: Int): Hour = Hour(value / i)
-    operator fun div(i: Float): Hour = Hour(value / i)
+    operator fun div(i: Double): Hour = Hour(value / i)
     operator fun times(i: Int): Hour = Hour(value * i)
-    operator fun times(i: Float): Hour = Hour(value * i)
+    operator fun times(i: Double): Hour = Hour(value * i)
 
     operator fun minus(i: Hour): Hour = Hour(value - i.value)
     operator fun plus(i: Hour): Hour = Hour(value + i.value)
@@ -45,7 +45,7 @@ data class Hour (override val value: Float) : AstronomicalUnit {
     operator fun compareTo(hour: Hour): Int = value.compareTo(hour.value)
 }
 
-val Float.hour: Hour
+val Double.hour: Hour
     get() = Hour(this)
 val Int.hour: Hour
-    get() = Hour(this.toFloat())
+    get() = Hour(this.toDouble())

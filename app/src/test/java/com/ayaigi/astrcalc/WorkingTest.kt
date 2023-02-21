@@ -1,5 +1,6 @@
 package com.ayaigi.astrcalc
 
+/*
 import com.ayaigi.astrcalc.core.AstronomicalResults
 import com.ayaigi.astrcalc.core.Astronomy
 import com.ayaigi.astrcalc.lib.units.deg
@@ -7,7 +8,6 @@ import com.ayaigi.astrcalc.target.solarsystem.SolarSystemTargets
 import com.ayaigi.loging.PrintLog
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
-
 val LogUtil = PrintLog()
 
 fun main() {
@@ -68,3 +68,5 @@ class SolarValues {
         }
     }
 }
+
+ */
